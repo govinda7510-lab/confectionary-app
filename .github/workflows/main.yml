@@ -19,6 +19,8 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.7' # 👈 This forces a stable, Android-compatible version!
 
       - name: Extract ZIP & Build APK
         run: |
@@ -28,7 +30,7 @@ jobs:
           # 2. Go directly into that folder
           cd android_src
           
-          # 3. Build the APK using the system's Gradle
+          # 3. Build the APK using the specific Gradle version we requested
           gradle assembleDebug
 
       - name: Upload Finished APK
