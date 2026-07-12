@@ -30,7 +30,10 @@ jobs:
           # 2. Go into the project directory
           cd android_src
           
-          # 3. Build the APK cleanly
+          # 3. Generate the missing debug keystore file the AI asked for
+          keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "C=US, O=Android, CN=Android Debug"
+          
+          # 4. Build the APK cleanly
           gradle assembleDebug
 
       - name: Upload Finished APK
