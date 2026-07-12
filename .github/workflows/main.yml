@@ -33,7 +33,10 @@ jobs:
           # 3. Strip out the duplicate Kotlin plugin that crashes AGP 9
           find . -name "*.gradle*" -type f -exec sed -i '/org.jetbrains.kotlin.android/d' {} +
           
-          # 4. Build the APK
+          # 4. Strip out the deprecated kotlinOptions block that breaks the new compiler
+          find . -name "*.gradle*" -type f -exec sed -i '/kotlinOptions {/,/}/d' {} +
+          
+          # 5. Build the APK
           gradle assembleDebug
 
       - name: Upload Finished APK
