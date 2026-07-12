@@ -16,25 +16,23 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '17'
-          # Removed the cache line because it crashes if gradle files aren't immediately found in the root
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Extract ZIP & Build APK
         run: |
           # 1. Unzip the uploaded archive into a new folder
           unzip *.zip -d android_src
           
-          # 2. Search for the actual project root (where the 'gradlew' script lives)
-          PROJECT_ROOT=$(dirname $(find ./android_src -name "gradlew" | head -n 1))
-          echo "Found project root at: $PROJECT_ROOT"
-          cd "$PROJECT_ROOT"
+          # 2. Go directly into that folder
+          cd android_src
           
-          # 3. Grant execute permissions and compile the app
-          chmod +x gradlew
-          ./gradlew assembleDebug
+          # 3. Build the APK using the system's Gradle
+          gradle assembleDebug
 
       - name: Upload Finished APK
         uses: actions/upload-artifact@v4
         with:
           name: my-offline-apk
-          # Using a wildcard path to find the APK wherever it was built inside the zip
           path: '**/*/app-debug.apk'
