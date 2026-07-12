@@ -20,7 +20,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: '9.3.1' # 👈 The exact version requested!
+          gradle-version: '9.3.1'
 
       - name: Extract ZIP & Build APK
         run: |
@@ -30,7 +30,10 @@ jobs:
           # 2. Go directly into that folder
           cd android_src
           
-          # 3. Build the APK using Gradle 9.3.1
+          # 3. Strip out the duplicate Kotlin plugin that crashes AGP 9
+          find . -name "*.gradle*" -type f -exec sed -i '/org.jetbrains.kotlin.android/d' {} +
+          
+          # 4. Build the APK
           gradle assembleDebug
 
       - name: Upload Finished APK
